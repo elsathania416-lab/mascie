@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Opening Video - Math Madness | MaScie 2026/2027</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tone.js untuk musik dan efek suara synthesizer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+        .title-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Animasi Bicaranya Robot (Mulut & Kepala) */
+        @keyframes talk-bounce {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-6px) rotate(-1.5deg); }
+            75% { transform: translateY(-2px) rotate(1.5deg); }
+        }
+        .robot-talking {
+            animation: talk-bounce 0.22s infinite ease-in-out;
+        }
+
+        @keyframes jaw-move {
+            0%, 100% { height: 12px; }
+            50% { height: 28px; }
+        }
+        .jaw-talking {
+            animation: jaw-move 0.18s infinite ease-in-out;
+        }
+
+        /* Animasi Mata Kedip & Glow Neon */
+        @keyframes eye-glow {
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 12px #06b6d4); }
+            50% { opacity: 0.3; filter: drop-shadow(0 0 2px #06b6d4); }
+        }
+        .eye-pulse {
+            animation: eye-glow 2.5s infinite;
+        }
+
+        /* Soundwave animation */
+        @keyframes wave-bar {
+            0%, 100% { height: 8px; }
+            50% { height: 32px; }
+        }
+        .wave-bar-1 { animation: wave-bar 0.3s infinite ease-in-out; }
+        .wave-bar-2 { animation: wave-bar 0.45s infinite ease-in-out 0.1s; }
+        .wave-bar-3 { animation: wave-bar 0.35s infinite ease-in-out 0.2s; }
+        .wave-bar-4 { animation: wave-bar 0.5s infinite ease-in-out 0.05s; }
+
+        /* Floating particles background */
+        @keyframes float-item {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.2; }
+            50% { transform: translateY(-25px) rotate(180deg); opacity: 0.6; }
+            100% { transform: translateY(0px) rotate(360deg); opacity: 0.2; }
+        }
+        .floating-math {
+            animation: float-item 6s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-white h-screen w-screen overflow-hidden flex flex-col justify-between items-center p-4 relative select-none">
+
+    <!-- Latar Belakang Elemen Matematika Melayang -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-30 text-rose-500/40 text-4xl sm:text-6xl font-black font-mono">
+        <span class="absolute top-[10%] left-[8%] floating-math" style="animation-delay: 0s;">+</span>
+        <span class="absolute top-[20%] right-[12%] floating-math" style="animation-delay: 1.5s;">-</span>
+        <span class="absolute bottom-[25%] left-[15%] floating-math" style="animation-delay: 3s;">×</span>
+        <span class="absolute bottom-[15%] right-[10%] floating-math" style="animation-delay: 4.5s;">=</span>
+        <span class="absolute top-[60%] left-[5%] floating-math" style="animation-delay: 2s;">100</span>
+        <span class="absolute top-[40%] right-[8%] floating-math" style="animation-delay: 3.5s;">-9</span>
+    </div>
+
+    <!-- Header Atas (Judul Kompetisi) -->
+    <header class="text-center z-10 mt-2">
+        <div class="inline-flex items-center gap-2 bg-rose-500/20 text-rose-300 border border-rose-500/40 px-4 py-1 rounded-full text-xs sm:text-sm font-bold tracking-widest uppercase">
+            <span>MaScie 2026/2027</span>
+            <span>•</span>
+            <span class="text-amber-300">Sekolah Harapan Prestasi</span>
+        </div>
+        <h1 class="title-font text-3xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-amber-300 to-cyan-400 mt-2 tracking-wider">
+            MATH MADNESS
+        </h1>
+        <p class="text-rose-400 text-sm sm:text-base font-bold uppercase tracking-widest mt-0.5">
+            — ROUND 1 OPENING CEREMONY —
+        </p>
+    </header>
+
+    <!-- Stage Utama: Robot Kartun SVG Interactive -->
+    <main class="relative z-10 flex flex-col items-center justify-center flex-1 w-full max-w-3xl my-2">
+        
+        <!-- Karakter Robot SVG -->
+        <div id="robotContainer" class="relative w-52 h-52 sm:w-64 sm:h-64 transition-transform duration-300">
+            
+            <svg class="w-full h-full drop-shadow-[0_0_25px_rgba(225,29,72,0.4)]" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Antena & Lampu -->
+                <rect x="143" y="15" width="14" height="35" rx="7" fill="#64748b"/>
+                <circle id="antennaBulb" cx="150" cy="15" r="12" fill="#e11d48" class="animate-pulse"/>
+                
+                <!-- Telinga Robot -->
+                <rect x="50" y="95" width="20" height="40" rx="8" fill="#475569"/>
+                <rect x="230" y="95" width="20" height="40" rx="8" fill="#475569"/>
+
+                <!-- Kepala Utama -->
+                <rect x="65" y="45" width="170" height="140" rx="32" fill="#1e293b" stroke="#334155" stroke-width="6"/>
+                
+                <!-- Layar Wajah -->
+                <rect x="82" y="62" width="136" height="106" rx="20" fill="#0f172a" stroke="#0284c7" stroke-width="4"/>
+
+                <!-- Mata Robot (Kiri & Kanan) -->
+                <g class="eye-pulse">
+                    <circle cx="118" cy="102" r="18" fill="#06b6d4"/>
+                    <circle cx="118" cy="102" r="7" fill="#ffffff"/>
+                    <circle cx="182" cy="102" r="18" fill="#06b6d4"/>
+                    <circle cx="182" cy="102" r="7" fill="#ffffff"/>
+                </g>
+
+                <!-- Pipi Merah Kartun -->
+                <circle cx="102" cy="128" r="8" fill="#fb7185" opacity="0.6"/>
+                <circle cx="198" cy="128" r="8" fill="#fb7185" opacity="0.6"/>
+
+                <!-- Mulut Robot (Bergetar saat ngomong) -->
+                <g id="robotMouth">
+                    <rect id="jawBox" x="120" y="136" width="60" height="12" rx="6" fill="#f59e0b"/>
+                    <!-- Gigi Digital -->
+                    <line x1="135" y1="136" x2="135" y2="148" stroke="#1e293b" stroke-width="2"/>
+                    <line x1="150" y1="136" x2="150" y2="148" stroke="#1e293b" stroke-width="2"/>
+                    <line x1="165" y1="136" x2="165" y2="148" stroke="#1e293b" stroke-width="2"/>
+                </g>
+
+                <!-- Badan Atas & Logo -->
+                <path d="M90 192 L210 192 L230 260 L70 260 Z" fill="#1e293b" stroke="#475569" stroke-width="5"/>
+                <circle cx="150" cy="225" r="18" fill="#e11d48"/>
+                <text x="150" y="231" font-family="'Orbitron', sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">M</text>
+            </svg>
+        </div>
+
+        <!-- Box Teks Subtitle / Teks Robot -->
+        <div class="w-full mt-4 bg-slate-900/90 border-2 border-cyan-500/50 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-md relative">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-cyan-400 animate-ping"></span>
+                    <span class="font-mono text-xs text-cyan-400 font-bold tracking-wider uppercase">ROBO-HOST 3000 • ONLINE</span>
+                </div>
+                <!-- Indikator Soundwave Suara -->
+                <div id="soundwaveWidget" class="opacity-30 flex items-end gap-1 h-5">
+                    <span class="w-1 bg-cyan-400 rounded-full wave-bar-1"></span>
+                    <span class="w-1 bg-amber-400 rounded-full wave-bar-2"></span>
+                    <span class="w-1 bg-rose-400 rounded-full wave-bar-3"></span>
+                    <span class="w-1 bg-emerald-400 rounded-full wave-bar-4"></span>
+                </div>
+            </div>
+
+            <!-- Teks Dialog Subtitle -->
+            <p id="speechBubble" class="text-base sm:text-xl font-bold text-slate-100 text-center leading-relaxed min-h-[3.5rem] flex items-center justify-center">
+                "Click the 'START OPENING VIDEO' button to listen to the announcement from Robo-Host!"
+            </p>
+        </div>
+    </main>
+
+    <!-- Tombol Kontrol Bawah -->
+    <footer class="z-10 w-full max-w-xl mb-3 flex flex-col sm:flex-row gap-3 justify-center items-center">
+        <!-- Tombol Utama Play Opening -->
+        <button onclick="startRobotOpening()" id="btnStart" class="w-full sm:w-auto flex-1 flex items-center justify-center gap-3 bg-gradient-to-r from-rose-600 via-purple-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 text-white font-extrabold px-6 py-3.5 rounded-2xl shadow-xl hover:shadow-rose-500/40 active:scale-95 transition-all border border-rose-400/40 text-base sm:text-lg">
+            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <span>START OPENING VIDEO</span>
+        </button>
+
+        <!-- Tombol Lanjut Ke Soal Game -->
+        <a href="math_madness_round_2.html" id="btnNextRound" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-6 py-3.5 rounded-2xl shadow-lg hover:shadow-emerald-500/30 active:scale-95 transition-all border border-emerald-400/40 text-base sm:text-lg">
+            <span>PROCEED TO GRID COMPETITION</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+        </a>
+    </footer>
+
+    <script>
+        // Dialog Narasi Robot (English)
+        const speechScript = [
+            "Hello everyone! Welcome to MaScie 2026/2027 at Sekolah Harapan Prestasi!",
+            "I am Robo-Host 3000, and I will be guiding you through the first round!",
+            "Are you ready to compete in Round 1: Math Madness?",
+            "The rule is simple: Calculate the sum of all 100 integers in the grid as fast and accurately as possible!",
+            "Get your mind and focus ready... Ready? Let's get started!"
+        ];
+
+        let isSpeaking = false;
+        let audioInitialized = false;
+
+        // Tone.js Synth Musik Background (Halus & Merdu, tanpa frekuensi dengung)
+        let chordSynth, bassSynth, synthLoop;
+
+        function initAudio() {
+            if (audioInitialized) return;
+
+            // Warm, smooth chord synth (suara lembut tanpa frekuensi tajam)
+            chordSynth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: 'sine' },
+                envelope: { attack: 0.15, decay: 0.4, sustain: 0.7, release: 1.0 }
+            }).toDestination();
+            chordSynth.volume.value = -12;
+
+            // Soft bass synth (gelombang triangle berfrekuensi rendah yang hangat)
+            bassSynth = new Tone.MonoSynth({
+                oscillator: { type: 'triangle' },
+                filter: { Q: 1, type: 'lowpass', frequency: 350 },
+                envelope: { attack: 0.08, decay: 0.4, sustain: 0.5, release: 0.6 }
+            }).toDestination();
+            bassSynth.volume.value = -10;
+
+            // Progresi akord harmonis & megah (C - G - Am - F)
+            const chordProgression = [
+                ['C4', 'E4', 'G4'],
+                ['G3', 'B3', 'D4'],
+                ['A3', 'C4', 'E4'],
+                ['F3', 'A3', 'C4']
+            ];
+            const bassNotes = ['C2', 'G1', 'A1', 'F1'];
+            let measure = 0;
+
+            synthLoop = new Tone.Loop(time => {
+                let idx = measure % chordProgression.length;
+                chordSynth.triggerAttackRelease(chordProgression[idx], '2n', time);
+                bassSynth.triggerAttackRelease(bassNotes[idx], '2n', time);
+                measure++;
+            }, '2n');
+
+            Tone.Transport.bpm.value = 100;
+            audioInitialized = true;
+        }
+
+        async function startRobotOpening() {
+            if (isSpeaking) return;
+
+            const btnStart = document.getElementById('btnStart');
+            btnStart.disabled = true;
+            btnStart.classList.add('opacity-50', 'cursor-not-allowed');
+
+            await Tone.start();
+            initAudio();
+
+            // Jalankan Musik Latar
+            synthLoop.start(0);
+            Tone.Transport.start();
+
+            isSpeaking = true;
+            document.getElementById('soundwaveWidget').classList.remove('opacity-30');
+            document.getElementById('soundwaveWidget').classList.add('opacity-100');
+
+            // Mulai Jalankan Suara & AnimasiRobot
+            playSequence(0);
+        }
+
+        function setRobotTalking(talking) {
+            const container = document.getElementById('robotContainer');
+            const jaw = document.getElementById('jawBox');
+            const bulb = document.getElementById('antennaBulb');
+
+            if (talking) {
+                container.classList.add('robot-talking');
+                jaw.classList.add('jaw-talking');
+                bulb.classList.replace('fill-[#e11d48]', 'fill-[#06b6d4]');
+            } else {
+                container.classList.remove('robot-talking');
+                jaw.classList.remove('jaw-talking');
+                bulb.classList.replace('fill-[#06b6d4]', 'fill-[#e11d48]');
+            }
+        }
+
+        function playSequence(index) {
+            if (index >= speechScript.length) {
+                // Selesai Pengumuman
+                setRobotTalking(false);
+                isSpeaking = false;
+                document.getElementById('speechBubble').innerText = "🎉 Announcement complete! Click 'PROCEED TO GRID COMPETITION' to begin!";
+                document.getElementById('soundwaveWidget').classList.add('opacity-30');
+                
+                // Highlight tombol masuk ke soal
+                const btnNext = document.getElementById('btnNextRound');
+                btnNext.classList.add('animate-bounce', 'ring-4', 'ring-emerald-300');
+                return;
+            }
+
+            const currentText = speechScript[index];
+            document.getElementById('speechBubble').innerText = `"${currentText}"`;
+
+            // Panggil Web Speech Synthesis (Suara Robot / Kartun Bahasa Inggris)
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Reset
+                const utterance = new SpeechSynthesisUtterance(currentText);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.95; // Kecepatan bicara normal
+                utterance.pitch = 1.25; // Pitch tinggi ala robot kartun
+
+                utterance.onstart = () => {
+                    setRobotTalking(true);
+                };
+
+                utterance.onend = () => {
+                    setRobotTalking(false);
+                    // Jeda sebentar antar kalimat
+                    setTimeout(() => playSequence(index + 1), 600);
+                };
+
+                utterance.onerror = () => {
+                    setRobotTalking(false);
+                    setTimeout(() => playSequence(index + 1), 2000);
+                };
+
+                window.speechSynthesis.speak(utterance);
+            } else {
+                // Fallback jika browser tidak mendukung Speech API
+                setRobotTalking(true);
+                setTimeout(() => {
+                    setRobotTalking(false);
+                    playSequence(index + 1);
+                }, 3500);
+            }
+        }
+    </script>
+</body>
+</html>
